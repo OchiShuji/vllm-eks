@@ -1,0 +1,45 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tfsec:
+    name: tfsec
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          working_directory: tf
+          soft_fail: false
+
+  kubesec:
+    name: kubesec
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan manifests with kubesec
+        run: |
+          curl -sSL https://github.com/controlplaneio/kubesec/releases/latest/download/kubesec_linux_amd64.tar.gz \
+            | tar -xz kubesec
+          chmod +x kubesec
+
+          FAILED=0
+          for f in manifests/*.yaml; do
+            echo "Scanning $f"
+            result=$(./kubesec scan "$f")
+            echo "$result"
+            score=$(echo "$result" | jq '.[0].score // 0')
+            if [ "$score" -lt 0 ]; then
+              echo "FAIL: $f scored $score"
+              FAILED=1
+            fi
+          done
+
+          exit $FAILED

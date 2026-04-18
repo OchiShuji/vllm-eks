@@ -1,0 +1,123 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="vllm-eks-architecture" name="vLLM EKS Architecture">
+    <mxGraphModel dx="665" dy="434" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="client" parent="1" style="shape=mxgraph.aws4.user;fillColor=#232F3E;fontColor=#ffffff;strokeColor=none;fontSize=11;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Client&#xa;(Allowed CIDRs)" vertex="1">
+          <mxGeometry height="60" width="60" x="60" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="r53" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.route_53;fillColor=#8C4FFF;strokeColor=none;fontColor=#232F3E;fontSize=11;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Route 53&#xa;vllm.consulting-io.com" vertex="1">
+          <mxGeometry height="60" width="60" x="220" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="acm" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.certificate_manager;fillColor=#DD344C;strokeColor=none;fontColor=#232F3E;fontSize=11;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="ACM Certificate&#xa;vllm.consulting-io.com&#xa;(TLS 1.3)" vertex="1">
+          <mxGeometry height="60" width="60" x="380" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="alb" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.application_load_balancer;fillColor=#8C4FFF;strokeColor=none;fontColor=#232F3E;fontSize=11;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Application Load Balancer&#xa;HTTPS :443 only&#xa;inbound-cidrs restricted" vertex="1">
+          <mxGeometry height="60" width="60" x="380" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="eks-boundary" parent="1" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_eks;grStroke=1;verticalLabelPosition=top;verticalAlign=bottom;fillColor=#E6F3FF;strokeColor=#1A73E8;fontStyle=1;fontSize=13;" value="EKS Cluster: vllm-cluster (ap-northeast-1) — Auto Mode" vertex="1">
+          <mxGeometry height="700" width="880" x="560" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="kube-system" parent="1" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_generic;verticalLabelPosition=top;verticalAlign=bottom;fillColor=#FFF8E1;strokeColor=#F9A825;fontStyle=1;fontSize=11;fontColor=default;" value="kube-system namespace" vertex="1">
+          <mxGeometry height="200" width="400" x="580" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="alb-ctrl" parent="1" style="shape=mxgraph.kubernetes.pod;fillColor=#326CE5;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="AWS Load Balancer Controller&#xa;(EKS Auto Mode built-in)" vertex="1">
+          <mxGeometry height="60" width="60" x="610" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="csi" parent="1" style="shape=mxgraph.kubernetes.pod;fillColor=#326CE5;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Secrets Store&#xa;CSI Driver" vertex="1">
+          <mxGeometry height="60" width="60" x="760" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="karpenter" parent="1" style="shape=mxgraph.kubernetes.pod;fillColor=#326CE5;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Karpenter&#xa;(Auto Mode)" vertex="1">
+          <mxGeometry height="60" width="60" x="890" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="default-ns" parent="1" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_generic;verticalLabelPosition=top;verticalAlign=bottom;fillColor=#E8F5E9;strokeColor=#388E3C;fontStyle=1;fontSize=11;fontColor=default;" value="default namespace" vertex="1">
+          <mxGeometry height="280" width="500" x="580" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="ingress" parent="1" style="shape=mxgraph.kubernetes.ing;fillColor=#326CE5;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Ingress&#xa;vllm-ingress" vertex="1">
+          <mxGeometry height="60" width="60" x="610" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="netpol" parent="1" style="shape=mxgraph.kubernetes.netpol;fillColor=#FF6F00;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="NetworkPolicy&#xa;vllm-ingress-only&#xa;(allow ALB → :8000 only)" vertex="1">
+          <mxGeometry height="60" width="60" x="730" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="vllm-svc" parent="1" style="shape=mxgraph.kubernetes.svc;fillColor=#326CE5;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Service&#xa;vllm-service&#xa;:8000" vertex="1">
+          <mxGeometry height="60" width="60" x="850" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="vllm-deploy" parent="1" style="shape=mxgraph.kubernetes.deploy;fillColor=#326CE5;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Deployment: vllm&#xa;vllm/vllm-openai:v0.8.3&#xa;Gemma2 2B" vertex="1">
+          <mxGeometry height="60" width="60" x="970" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="spc" parent="1" style="shape=mxgraph.kubernetes.secret;fillColor=#FF8F00;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="SecretProviderClass&#xa;hf-token-secret" vertex="1">
+          <mxGeometry height="60" width="60" x="850" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="k8s-secret" parent="1" style="shape=mxgraph.kubernetes.secret;fillColor=#E65100;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="Secret&#xa;hf-token&#xa;(synced)" vertex="1">
+          <mxGeometry height="60" width="60" x="970" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="gpu-node-boundary" parent="1" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_auto_scaling;verticalLabelPosition=top;verticalAlign=bottom;fillColor=#FCE4EC;strokeColor=#C62828;fontStyle=1;fontSize=11;fontColor=default;" value="GPU NodePool (Karpenter)&#xa;g4dn instances — Spot preferred / On-demand fallback" vertex="1">
+          <mxGeometry height="200" width="410" x="1000" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="gpu-node" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#ED7100;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="EC2 Node (g4dn.xlarge)&#xa;NVIDIA T4 GPU 16GB&#xa;taint: nvidia.com/gpu=true" vertex="1">
+          <mxGeometry height="60" width="60" x="1060" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="vllm-pod" parent="1" style="shape=mxgraph.kubernetes.pod;fillColor=#1B5E20;strokeColor=none;fontColor=default;fontSize=10;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="vLLM Pod&#xa;1x GPU&#xa;HF_TOKEN (secretKeyRef)" vertex="1">
+          <mxGeometry height="60" width="60" x="1220" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="sm" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.secrets_manager;fillColor=#DD344C;strokeColor=none;fontColor=#232F3E;fontSize=11;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="AWS Secrets Manager&#xa;vllm-cluster/hf-token" vertex="1">
+          <mxGeometry height="60" width="60" x="1520" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="cw" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch;fillColor=#E7157B;strokeColor=none;fontColor=#232F3E;fontSize=11;fontStyle=1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;" value="CloudWatch&#xa;Control Plane Logs&#xa;+ Pod Logs" vertex="1">
+          <mxGeometry height="60" width="60" x="1520" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;" target="r53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="r53" style="edgeStyle=orthogonalEdgeStyle;" target="alb" value="DNS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="acm" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" target="alb" value="TLS cert">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="alb" style="edgeStyle=orthogonalEdgeStyle;" target="ingress" value="HTTPS :443">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="ingress" style="edgeStyle=orthogonalEdgeStyle;fontColor=default;" target="netpol">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="netpol" style="edgeStyle=orthogonalEdgeStyle;fontColor=default;" target="vllm-svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="vllm-svc" style="edgeStyle=orthogonalEdgeStyle;fontColor=default;" target="vllm-deploy">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="vllm-deploy" style="edgeStyle=orthogonalEdgeStyle;fontColor=default;" target="vllm-pod">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="karpenter" style="edgeStyle=orthogonalEdgeStyle;dashed=1;fontColor=default;" target="gpu-node" value="provisions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="vllm-pod" style="edgeStyle=orthogonalEdgeStyle;dashed=1;fontColor=default;" target="gpu-node" value="scheduled on">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="spc" style="edgeStyle=orthogonalEdgeStyle;fontColor=default;" target="k8s-secret" value="syncs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="csi" style="edgeStyle=orthogonalEdgeStyle;dashed=1;fontColor=default;" target="spc" value="mounts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="vllm-deploy" style="edgeStyle=orthogonalEdgeStyle;dashed=1;fontColor=default;" target="k8s-secret" value="env from secretKeyRef">
+          <mxGeometry relative="1" x="0.5799" y="70" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="csi" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" target="sm" value="fetches secret">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="eks-boundary" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" target="cw" value="logs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="alb-ctrl" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" target="alb" value="manages">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

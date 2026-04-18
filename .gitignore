@@ -1,0 +1,4 @@
+.git
+tf/.terraform
+tf/*.tfstate*
+tf/.terraform.lock.hcl
