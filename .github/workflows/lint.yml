@@ -32,22 +32,40 @@ jobs:
 
       - name: Scan manifests with kubesec
         run: |
-          SUPPORTED_KINDS="Pod|Deployment|DaemonSet|StatefulSet|ReplicaSet|ReplicationController|Job|CronJob"
-          FAILED=0
-          for f in manifests/*.yaml; do
-            if ! grep -qE "^kind: ($SUPPORTED_KINDS)$" "$f"; then
-              echo "Skipping $f (no supported kind)"
-              continue
-            fi
-            echo "Scanning $f"
-            result=$(kubesec scan "$f")
-            echo "$result"
-            score=$(echo "$result" | jq '.[0].score // 0')
-            if [ "$score" -lt 0 ]; then
-              echo "FAIL: $f scored $score"
-              FAILED=1
-            fi
-          done
+          python3 << 'EOF'
+          import subprocess, sys, json, os, re
 
-          exit $FAILED
+          supported = re.compile(
+            r'^kind:\s*(Pod|Deployment|DaemonSet|StatefulSet|ReplicaSet|ReplicationController|Job|CronJob)\s*$',
+            re.MULTILINE
+          )
+          failed = 0
+
+          for fname in sorted(os.listdir('manifests')):
+            if not fname.endswith('.yaml'):
+              continue
+            fpath = os.path.join('manifests', fname)
+            docs = [d for d in open(fpath).read().split('---') if d.strip()]
+            for doc in docs:
+              if not supported.search(doc):
+                print(f"Skipping a doc in {fname} (unsupported kind)")
+                continue
+              print(f"Scanning doc in {fname}")
+              result = subprocess.run(
+                ['kubesec', 'scan', '/dev/stdin'],
+                input=doc.encode(), capture_output=True
+              )
+              out = result.stdout.decode()
+              print(out)
+              try:
+                score = json.loads(out)[0].get('score', 0)
+                if score < 0:
+                  print(f"FAIL: {fname} scored {score}")
+                  failed = 1
+              except Exception as e:
+                print(f"Parse error in {fname}: {e}")
+                failed = 1
+
+          sys.exit(failed)
+          EOF
 
