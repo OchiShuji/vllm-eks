@@ -32,8 +32,13 @@ jobs:
 
       - name: Scan manifests with kubesec
         run: |
+          SUPPORTED_KINDS="Pod|Deployment|DaemonSet|StatefulSet|ReplicaSet|ReplicationController|Job|CronJob"
           FAILED=0
           for f in manifests/*.yaml; do
+            if ! grep -qE "^kind: ($SUPPORTED_KINDS)$" "$f"; then
+              echo "Skipping $f (no supported kind)"
+              continue
+            fi
             echo "Scanning $f"
             result=$(kubesec scan "$f")
             echo "$result"
