@@ -21,13 +21,16 @@ jobs:
   kubesec:
     name: kubesec
     runs-on: ubuntu-latest
-    container:
-      image: kubesec/kubesec:v2
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install kubesec
+        run: |
+          curl -sSL https://github.com/controlplaneio/kubesec/releases/download/v2.14.2/kubesec_linux_amd64.tar.gz \
+            | tar -xz kubesec
+          sudo mv kubesec /usr/local/bin/
+
       - name: Scan manifests with kubesec
-        shell: sh
         run: |
           FAILED=0
           for f in manifests/*.yaml; do
