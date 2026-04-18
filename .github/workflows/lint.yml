@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run kubesec scanner
-        uses: controlplaneio/kubesec-action@master
+        uses: controlplaneio/kubesec-action@main
         with:
           input: manifests/*
 
