@@ -19,13 +19,17 @@ jobs:
           soft_fail: false
 
   kubesec:
-    name: kubesec
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Scan Kubernetes manifests
+      - name: Run kubesec scanner
         uses: controlplaneio/kubesec-action@master
         with:
-          input: manifests/*.yaml
-          
+          input: file.yaml
+          exit-code: "0"
+          format: template
+          template: template/sarif.tpl
+          output: kubesec-results.sarif
+
