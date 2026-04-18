@@ -20,16 +20,12 @@ jobs:
 
   kubesec:
     name: kubesec
-    runs-on: ubuntu-latest
+    runs-on: kubesec/kubesec:v2
     steps:
       - uses: actions/checkout@v4
 
       - name: Scan manifests with kubesec
         run: |
-          curl -sSL https://github.com/controlplaneio/kubesec/releases/latest/download/kubesec_linux_amd64.tar.gz \
-            | tar -xz kubesec
-          chmod +x kubesec
-
           FAILED=0
           for f in manifests/*.yaml; do
             echo "Scanning $f"
