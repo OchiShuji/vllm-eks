@@ -27,9 +27,5 @@ jobs:
       - name: Run kubesec scanner
         uses: controlplaneio/kubesec-action@master
         with:
-          input: file.yaml
-          exit-code: "0"
-          format: template
-          template: template/sarif.tpl
-          output: kubesec-results.sarif
+          input: manifests/*
 
