@@ -19,13 +19,27 @@ jobs:
           soft_fail: false
 
   kubesec:
+    name: kubesec
     runs-on: ubuntu-latest
+    container:
+      image: kubesec/kubesec:v2
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Run kubesec scanner
-        uses: controlplaneio/kubesec-action@main
-        with:
-          input: manifests/*
+      - name: Scan manifests with kubesec
+        shell: sh
+        run: |
+          FAILED=0
+          for f in manifests/*.yaml; do
+            echo "Scanning $f"
+            result=$(kubesec scan "$f")
+            echo "$result"
+            score=$(echo "$result" | jq '.[0].score // 0')
+            if [ "$score" -lt 0 ]; then
+              echo "FAIL: $f scored $score"
+              FAILED=1
+            fi
+          done
+
+          exit $FAILED
 
